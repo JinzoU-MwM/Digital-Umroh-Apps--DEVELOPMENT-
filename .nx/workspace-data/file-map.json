@@ -1,0 +1,242 @@
+{
+  "version": "6.0",
+  "nxVersion": "19.8.14",
+  "deps": {
+    "@nx/eslint-plugin": "^19.0.0",
+    "@nx/jest": "^19.0.0",
+    "@nx/js": "^19.0.0",
+    "@nx/nest": "^19.0.0",
+    "@nx/next": "^19.0.0",
+    "@nx/react": "^19.0.0",
+    "@nx/workspace": "^19.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.0",
+    "jest": "^29.7.0",
+    "nx": "^19.0.0",
+    "prettier": "^3.2.0",
+    "typescript": "^5.3.0"
+  },
+  "pathMappings": {},
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "projectFileMap": {},
+    "nonProjectFiles": [
+      {
+        "file": ".claude/settings.json",
+        "hash": "15530242430486210960"
+      },
+      {
+        "file": ".claude/settings.local.json",
+        "hash": "8920228264520922350"
+      },
+      {
+        "file": ".devcontainer/Dockerfile",
+        "hash": "8695793071445290336"
+      },
+      {
+        "file": ".devcontainer/devcontainer.json",
+        "hash": "3084084033507980640"
+      },
+      {
+        "file": ".devcontainer/docker-compose.yml",
+        "hash": "17795267183833729812"
+      },
+      {
+        "file": ".github/workflows/ci.yml",
+        "hash": "5941273045223966604"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "15349944591730405334"
+      },
+      {
+        "file": "README.md",
+        "hash": "3113879070816557731"
+      },
+      {
+        "file": "apps/api/.env.example",
+        "hash": "503500751555992002"
+      },
+      {
+        "file": "apps/api/package.json",
+        "hash": "876020418569366229"
+      },
+      {
+        "file": "apps/api/prisma/enable-rls.sql",
+        "hash": "5028421603218627097"
+      },
+      {
+        "file": "apps/api/prisma/schema.prisma",
+        "hash": "9508628814376188199"
+      },
+      {
+        "file": "apps/api/prisma/seed.ts",
+        "hash": "17736607027755323863"
+      },
+      {
+        "file": "apps/api/src/app.module.ts",
+        "hash": "2063979948657693974"
+      },
+      {
+        "file": "apps/api/src/main.ts",
+        "hash": "5179423233068704058"
+      },
+      {
+        "file": "apps/web/middleware.ts",
+        "hash": "16978496234849151369"
+      },
+      {
+        "file": "apps/web/next.config.js",
+        "hash": "1693982047366875599"
+      },
+      {
+        "file": "apps/web/package.json",
+        "hash": "10467232734902205132"
+      },
+      {
+        "file": "apps/web/tailwind.config.js",
+        "hash": "980326162275618269"
+      },
+      {
+        "file": "apps/worker/package.json",
+        "hash": "2276032958095384065"
+      },
+      {
+        "file": "apps/worker/src/app.module.ts",
+        "hash": "16134490042991207988"
+      },
+      {
+        "file": "apps/worker/src/main.ts",
+        "hash": "8565745393322342877"
+      },
+      {
+        "file": "apps/worker/src/processors/notification.processor.ts",
+        "hash": "15230294608875021581"
+      },
+      {
+        "file": "apps/worker/src/processors/processors.module.ts",
+        "hash": "12877907386675737225"
+      },
+      {
+        "file": "apps/worker/src/queues/queue.constants.ts",
+        "hash": "6655438671595151348"
+      },
+      {
+        "file": "apps/worker/src/queues/queues.module.ts",
+        "hash": "10951313332818534383"
+      },
+      {
+        "file": "infra/docker/.env.example",
+        "hash": "16180277194502639497"
+      },
+      {
+        "file": "infra/docker/Dockerfile.api",
+        "hash": "91640908458850470"
+      },
+      {
+        "file": "infra/docker/Dockerfile.web",
+        "hash": "17579801391537412588"
+      },
+      {
+        "file": "infra/docker/Dockerfile.worker",
+        "hash": "2585661395248775034"
+      },
+      {
+        "file": "infra/docker/docker-compose.yml",
+        "hash": "11814083765730131955"
+      },
+      {
+        "file": "infra/docker/nginx/nginx.conf",
+        "hash": "534739290121298350"
+      },
+      {
+        "file": "nx.json",
+        "hash": "9722681072909700673"
+      },
+      {
+        "file": "package.json",
+        "hash": "10216419654570724291"
+      },
+      {
+        "file": "packages/config/eslint.config.js",
+        "hash": "9970381238813125795"
+      },
+      {
+        "file": "packages/config/package.json",
+        "hash": "13635142014829873732"
+      },
+      {
+        "file": "packages/config/prettier.config.js",
+        "hash": "5148977352017655134"
+      },
+      {
+        "file": "packages/config/tsconfig.base.json",
+        "hash": "12630823346996965893"
+      },
+      {
+        "file": "packages/schemas/package.json",
+        "hash": "11459888039801593451"
+      },
+      {
+        "file": "packages/schemas/src/index.ts",
+        "hash": "10550407558184681695"
+      },
+      {
+        "file": "packages/schemas/src/schemas/booking.ts",
+        "hash": "9611948271771290389"
+      },
+      {
+        "file": "packages/schemas/src/schemas/common.ts",
+        "hash": "7886848718415920697"
+      },
+      {
+        "file": "packages/schemas/src/schemas/customer.ts",
+        "hash": "3176682106352344500"
+      },
+      {
+        "file": "packages/schemas/src/schemas/event.ts",
+        "hash": "5156905741380841233"
+      },
+      {
+        "file": "packages/schemas/src/schemas/invoice.ts",
+        "hash": "16490143619394838341"
+      },
+      {
+        "file": "packages/schemas/src/schemas/notification.ts",
+        "hash": "1222431303659275159"
+      },
+      {
+        "file": "packages/schemas/src/schemas/package.ts",
+        "hash": "1500829200961499514"
+      },
+      {
+        "file": "packages/schemas/src/schemas/payment.ts",
+        "hash": "12797777505432200255"
+      },
+      {
+        "file": "packages/schemas/src/schemas/pilgrim.ts",
+        "hash": "466326575879788436"
+      },
+      {
+        "file": "packages/schemas/src/schemas/tenant.ts",
+        "hash": "4481895571563192622"
+      },
+      {
+        "file": "packages/schemas/src/schemas/user.ts",
+        "hash": "15584824627540715781"
+      },
+      {
+        "file": "packages/schemas/tsconfig.json",
+        "hash": "17874009978033756976"
+      },
+      {
+        "file": "prd.md",
+        "hash": "15114006120610481066"
+      }
+    ]
+  }
+}

@@ -1,0 +1,457 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Tenant management
+model Tenant {
+  id                String   @id @default(uuid())
+  name              String
+  slug              String   @unique
+  domain            String?  @unique
+  plan              TenantPlan @default(STARTER)
+  status            TenantStatus @default(TRIAL)
+  owner_id          String
+  contact_email     String
+  contact_phone     String
+  address           Json?
+  settings          Json?    @default("{}")
+  trial_ends_at     DateTime?
+  subscription_renews_at DateTime?
+  limits            Json     @default("{\"users\":5,\"packages\":10,\"bookings_per_month\":100,\"storage_mb\":1000,\"whatsapp_per_day\":50}")
+  usage             Json     @default("{\"users\":0,\"packages\":0,\"bookings_this_month\":0,\"storage_used_mb\":0,\"whatsapp_today\":0}")
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+  deleted_at        DateTime?
+
+  // Relations
+  users             User[]
+  packages          Package[]
+  customers         Customer[]
+  bookings          Booking[]
+  pilgrims          Pilgrim[]
+  invoices          Invoice[]
+  payments          Payment[]
+  notifications     Notification[]
+  audit_logs        AuditLog[]
+
+  @@map("tenants")
+}
+
+model User {
+  id                    String     @id @default(uuid())
+  tenant_id             String
+  email                 String
+  password_hash         String
+  name                  String
+  phone                 String?
+  role                  UserRole   @default(VIEWER)
+  status                UserStatus @default(PENDING)
+  avatar_url            String?
+  permissions           String[]   @default([])
+  email_verified_at     DateTime?
+  phone_verified_at     DateTime?
+  last_login_at         DateTime?
+  password_changed_at   DateTime?
+  two_factor_enabled    Boolean    @default(false)
+  two_factor_secret     String?
+  refresh_tokens        Json[]     @default([])
+  email_otp_code        String?
+  email_otp_expires_at  DateTime?
+  created_at            DateTime   @default(now())
+  updated_at            DateTime   @updatedAt
+  deleted_at            DateTime?
+
+  // Relations
+  tenant                Tenant     @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  created_bookings      Booking[]  @relation("BookingCreator")
+  updated_bookings      Booking[]  @relation("BookingUpdater")
+  created_invoices      Invoice[]  @relation("InvoiceCreator")
+  created_payments      Payment[]  @relation("PaymentCreator")
+  notifications         Notification[]
+  audit_logs            AuditLog[]
+
+  @@unique([tenant_id, email])
+  @@map("users")
+}
+
+// Core business entities
+model Package {
+  id                   String        @id @default(uuid())
+  tenant_id            String
+  name                 String
+  code                 String
+  type                 PackageType
+  description          String?
+  period_from          DateTime
+  period_to            DateTime
+  quota                Int
+  quota_booked         Int           @default(0)
+  hotels               Json[]        @default([])
+  flights              Json[]        @default([])
+  itinerary            Json[]        @default([])
+  price_quad           Float
+  price_triple         Float
+  price_double         Float
+  price_single         Float
+  inclusions           String[]      @default([])
+  exclusions           String[]      @default([])
+  terms                String?
+  notes                String?
+  status               PackageStatus @default(DRAFT)
+  featured_image_url   String?
+  gallery_images       String[]      @default([])
+  documents_required   String[]      @default([])
+  created_at           DateTime      @default(now())
+  updated_at           DateTime      @updatedAt
+  deleted_at           DateTime?
+
+  // Relations
+  tenant               Tenant        @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  bookings             Booking[]
+
+  @@unique([tenant_id, code])
+  @@map("packages")
+}
+
+model Customer {
+  id              String    @id @default(uuid())
+  tenant_id       String
+  name            String
+  email           String?
+  phone           String
+  address         Json?
+  id_type         String    // KTP, PASSPORT, SIM
+  id_number       String
+  birth_date      DateTime
+  gender          String    // MALE, FEMALE
+  nationality     String    @default("Indonesia")
+  company         String?
+  notes           String?
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  deleted_at      DateTime?
+
+  // Relations
+  tenant          Tenant    @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  bookings        Booking[]
+  pilgrims        Pilgrim[]
+  invoices        Invoice[]
+
+  @@unique([tenant_id, id_number])
+  @@map("customers")
+}
+
+model Booking {
+  id                    String        @id @default(uuid())
+  tenant_id             String
+  customer_id           String
+  package_id            String
+  booking_code          String        @unique
+  status                BookingStatus @default(DRAFT)
+  payment_status        PaymentStatus @default(PENDING)
+  room_type             RoomType
+  number_of_pilgrims    Int
+  special_requests      String?
+  notes                 String?
+  base_price            Float
+  tax_amount            Float
+  additional_fees       Float         @default(0)
+  discount_amount       Float         @default(0)
+  total_price           Float
+  dp_amount             Float
+  dp_paid               Float         @default(0)
+  remaining_amount      Float
+  remaining_paid        Float         @default(0)
+  total_paid            Float         @default(0)
+  booking_date          DateTime      @default(now())
+  confirmation_date     DateTime?
+  payment_complete_date DateTime?
+  departure_date        DateTime
+  return_date           DateTime
+  created_by            String
+  updated_by            String?
+  created_at            DateTime      @default(now())
+  updated_at            DateTime      @updatedAt
+  deleted_at            DateTime?
+
+  // Relations
+  tenant                Tenant        @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  customer              Customer      @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+  package               Package       @relation(fields: [package_id], references: [id], onDelete: Cascade)
+  pilgrims              Pilgrim[]
+  invoices              Invoice[]
+  payments              Payment[]      @relation("BookingPayments")
+  creator               User          @relation("BookingCreator", fields: [created_by], references: [id])
+  updater               User?         @relation("BookingUpdater", fields: [updated_by], references: [id])
+
+  @@map("bookings")
+}
+
+model Pilgrim {
+  id                    String           @id @default(uuid())
+  tenant_id             String
+  booking_id            String
+  customer_id           String
+  name                  String
+  birth_date            DateTime
+  birth_place           String
+  gender                String           // MALE, FEMALE
+  id_type               String           // KTP, PASSPORT
+  id_number             String
+  passport_number       String?
+  passport_expiry       DateTime?
+  family_relationship   String
+  phone                 String?
+  email                 String?
+  address               String?
+  emergency_contact     Json?
+  room_number           String?
+  building              String?
+  floor                 Int?
+  documents             Json[]          @default([])
+  document_completion   Float            @default(0)
+  status                String           @default("REGISTERED")
+  created_at            DateTime         @default(now())
+  updated_at            DateTime         @updatedAt
+  deleted_at            DateTime?
+
+  // Relations
+  tenant                Tenant           @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  booking               Booking          @relation(fields: [booking_id], references: [id], onDelete: Cascade)
+  customer              Customer         @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+
+  @@map("pilgrims")
+}
+
+model Invoice {
+  id                    String        @id @default(uuid())
+  tenant_id             String
+  booking_id            String
+  customer_id           String
+  invoice_number        String        @unique
+  status                InvoiceStatus @default(DRAFT)
+  issue_date            DateTime
+  due_date              DateTime
+  paid_date             DateTime?
+  items                 Json[]        // Invoice items
+  subtotal              Float
+  tax_amount            Float
+  discount_amount       Float         @default(0)
+  total_amount          Float
+  paid_amount           Float         @default(0)
+  remaining_amount      Float
+  notes                 String?
+  terms                 String?
+  created_by            String
+  created_at            DateTime      @default(now())
+  updated_at            DateTime      @updatedAt
+  deleted_at            DateTime?
+
+  // Relations
+  tenant                Tenant        @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  booking               Booking       @relation(fields: [booking_id], references: [id], onDelete: Cascade)
+  customer              Customer      @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+  payments              Payment[]
+  creator               User          @relation("InvoiceCreator", fields: [created_by], references: [id])
+
+  @@map("invoices")
+}
+
+model Payment {
+  id                    String           @id @default(uuid())
+  tenant_id             String
+  invoice_id            String
+  booking_id            String?
+  amount                Float
+  method                PaymentMethod
+  provider              PaymentProvider @default(MANUAL)
+  provider_reference    String?
+  status                PaymentStatus    @default(PENDING)
+  paid_at               DateTime?
+  provider_response     Json?
+  notes                 String?
+  created_by            String
+  created_at            DateTime         @default(now())
+  updated_at            DateTime         @updatedAt
+  deleted_at            DateTime?
+
+  // Relations
+  tenant                Tenant           @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  invoice               Invoice          @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
+  booking               Booking?         @relation("BookingPayments", fields: [booking_id], references: [id])
+  creator               User             @relation("PaymentCreator", fields: [created_by], references: [id])
+
+  @@map("payments")
+}
+
+model Notification {
+  id                    String                @id @default(uuid())
+  tenant_id             String
+  recipient_id          String
+  type                  NotificationType
+  channel               NotificationChannel
+  title                 String
+  content               String
+  template_data         Json?
+  status                String                @default("PENDING")
+  scheduled_at          DateTime?
+  sent_at               DateTime?
+  delivered_at          DateTime?
+  failed_at             DateTime?
+  failure_reason        String?
+  priority              String                @default("NORMAL")
+  external_id           String?
+  provider_response     Json?
+  created_at            DateTime              @default(now())
+  updated_at            DateTime              @updatedAt
+  deleted_at            DateTime?
+
+  // Relations
+  tenant                Tenant                @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  recipient_user        User?                 @relation(fields: [recipient_id], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  tenant_id   String
+  user_id     String?
+  entity      String
+  entity_id   String
+  action      String   // CREATE, UPDATE, DELETE
+  old_values  Json?
+  new_values  Json?
+  ip_address  String?
+  user_agent  String?
+  created_at  DateTime @default(now())
+
+  // Relations
+  tenant      Tenant   @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  user        User?    @relation(fields: [user_id], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
+}
+
+
+// Enums
+enum TenantPlan {
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+enum TenantStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  TRIAL
+}
+
+enum UserRole {
+  OWNER
+  ADMIN
+  FINANCE
+  OPERATION
+  SALES
+  VIEWER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  SUSPENDED
+}
+
+enum PackageType {
+  UMRAH
+  HAJI_PLUS
+  HAJI_REGULER
+}
+
+enum PackageStatus {
+  DRAFT
+  PUBLISHED
+  FULL
+  CANCELLED
+  COMPLETED
+}
+
+enum RoomType {
+  QUAD
+  TRIPLE
+  DOUBLE
+  SINGLE
+}
+
+enum BookingStatus {
+  DRAFT
+  PENDING
+  CONFIRMED
+  PAID
+  CANCELLED
+  REFUNDED
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  PARTIAL
+  PAID
+  OVERDUE
+  FAILED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  PARTIALLY_PAID
+  OVERDUE
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  BANK_TRANSFER
+  VIRTUAL_ACCOUNT
+  E_WALLET
+  CREDIT_CARD
+  CASH
+}
+
+enum PaymentProvider {
+  XENDIT
+  MIDTRANS
+  MANUAL
+}
+
+enum NotificationChannel {
+  WHATSAPP
+  EMAIL
+  SMS
+  PUSH_NOTIFICATION
+  IN_APP
+}
+
+enum NotificationType {
+  BOOKING_CONFIRMED
+  PAYMENT_RECEIVED
+  PAYMENT_OVERDUE
+  DOCUMENT_UPLOADED
+  DOCUMENT_VERIFIED
+  DOCUMENT_REJECTED
+  DEPARTURE_REMINDER
+  ROOM_ASSIGNMENT
+  FLIGHT_CHANGE
+  GENERAL_ANNOUNCEMENT
+}

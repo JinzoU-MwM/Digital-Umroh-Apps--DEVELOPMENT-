@@ -1,0 +1,11 @@
+[NX Daemon Server] - 2025-10-14T13:30:50.991Z - Started listening on: \\.\pipe\nx\C:\Users\User\AppData\Local\Temp\92b604016a7dbeb8a654\d.sock
+[NX Daemon Server] - 2025-10-14T13:30:50.994Z - [WATCHER]: Subscribed to changes within: C:\Users\User\OneDrive\Desktop\New Coding Project\Digital-Umroh (native)
+[NX Daemon Server] - 2025-10-14T13:30:50.998Z - Established a connection. Number of open connections: 1
+[NX Daemon Server] - 2025-10-14T13:30:51.001Z - Closed a connection. Number of open connections: 0
+[NX Daemon Server] - 2025-10-14T13:30:51.002Z - Established a connection. Number of open connections: 1
+[NX Daemon Server] - 2025-10-14T13:30:51.004Z - [REQUEST]: Responding to the client. Shutdown initiated
+[NX Daemon Server] - 2025-10-14T13:30:51.005Z - Done responding to the client Shutdown initiated
+[NX Daemon Server] - 2025-10-14T13:30:51.006Z - Handled FORCE_SHUTDOWN. Handling time: 1. Response time: 2.
+[NX Daemon Server] - 2025-10-14T13:30:51.006Z - Closed a connection. Number of open connections: 0
+[NX Daemon Server] - 2025-10-14T13:30:51.007Z - [WATCHER]: Stopping the watcher for C:\Users\User\OneDrive\Desktop\New Coding Project\Digital-Umroh (sources)
+[NX Daemon Server] - 2025-10-14T13:30:51.007Z - [WATCHER]: Stopping the watcher for C:\Users\User\OneDrive\Desktop\New Coding Project\Digital-Umroh (outputs)

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation - Digital Umroh</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .content {
+            background: #ffffff;
+            padding: 40px;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+        }
+        .booking-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .booking-details h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: bold;
+            color: #555;
+        }
+        .detail-value {
+            color: #333;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+        .btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .important {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .important h4 {
+            color: #856404;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>✈️ Booking Confirmed!</h1>
+        <p>Digital Umroh - Your Spiritual Journey Awaits</p>
+    </div>
+
+    <div class="content">
+        <h2>Assalamu'alaikum {{customerName}},</h2>
+
+        <p><strong>Alhamdulillah!</strong> Your booking has been confirmed. We're honored to be part of your sacred journey to the holy lands.</p>
+
+        <div class="booking-details">
+            <h3>📋 Booking Details</h3>
+            <div class="detail-row">
+                <span class="detail-label">Booking Code:</span>
+                <span class="detail-value"><strong>{{bookingCode}}</strong></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Package:</span>
+                <span class="detail-value">{{packageName}}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Departure Date:</span>
+                <span class="detail-value">{{departureDate}}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Total Amount:</span>
+                <span class="detail-value"><strong>Rp {{totalAmount}}</strong></span>
+            </div>
+        </div>
+
+        <div class="important">
+            <h4>📌 Important Information</h4>
+            <p>Please ensure you have the following documents ready:</p>
+            <ul>
+                <li>Valid Passport (minimum 6 months validity)</li>
+                <li>Recent passport-sized photographs (4x6 cm)</li>
+                <li>Birth certificate (for family packages)</li>
+                <li>Marriage certificate (for couples)</li>
+                <li>Vaccination certificate (if required)</li>
+            </ul>
+        </div>
+
+        <p>Our team will contact you shortly with detailed information about:</p>
+        <ul>
+            <li>Flight arrangements</li>
+            <li>Hotel accommodations</li>
+            <li>Transportation details</li>
+            <li>Visa processing assistance</li>
+            <li>Pre-departure briefing schedule</li>
+        </ul>
+
+        <p style="text-align: center;">
+            <a href="{{websiteUrl}}" class="btn">View My Booking</a>
+        </p>
+
+        <p>For any questions or immediate assistance, please don't hesitate to contact our customer service team.</p>
+    </div>
+
+    <div class="footer">
+        <p><strong>Digital Umroh</strong></p>
+        <p>Your Gateway to Spiritual Journey</p>
+        <p>📞 Hotline: +62 21 1234 5678</p>
+        <p>📧 Email: <a href="mailto:{{supportEmail}}">{{supportEmail}}</a></p>
+        <p>🌐 Website: <a href="{{websiteUrl}}">{{websiteUrl}}</a></p>
+        <p>&copy; 2024 Digital Umroh. All rights reserved.</p>
+    </div>
+</body>
+</html>
